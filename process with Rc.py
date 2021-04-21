@@ -53,7 +53,7 @@ train_data['RUL'] = np.where(train_data['RUL'] >= w1, 125, train_data['RUL'] )
 # MinMax normalization (from 0 to 1)
 train_data['cycle_norm'] = train_data['cycle']
 cols_normalize = train_data.columns.difference(['id','cycle','RUL','label1','label2']) # 把除了这些标签的都提取出来
-scaler = MinMaxScaler() # 归一化
+scaler = MinMaxScaler()
 #scaler = MaxAbsScaler()
 #scaler = StandardScaler()
 norm_train_data = pd.DataFrame(scaler.fit_transform(train_data[cols_normalize]),columns=cols_normalize, index=train_data.index) # fit_transform是用来算归一化的
