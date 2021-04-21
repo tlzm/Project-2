@@ -48,7 +48,7 @@ def reshapeFeatures(id_df, seq_length, seq_cols):
     :return: a generator of the sequences
     """
     data_matrix = id_df[seq_cols].values
-    num_elements = data_matrix.shape[0] # 输出行数
+    num_elements = data_matrix.shape[0] 
     for start, stop in zip(range(0, num_elements-seq_length), range(seq_length, num_elements)):
         yield data_matrix[start:stop, :]
         
@@ -88,7 +88,7 @@ print(label_array.shape)
 # MODEL
 
 def root_mean_squared_error(y_true, y_pred):
-        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) # 均方根差
+        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) 
 
 def score_calc(y_true, y_pred):
     return K.mean((-1+K.exp(K.relu(y_true-y_pred)/13)+-1+K.exp(K.relu(y_pred-y_true)/10)),axis=-1)
