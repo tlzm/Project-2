@@ -5,11 +5,6 @@ Created on Mon Aug  3 10:55:00 2020
 @author: 24687
 """
 
-
-
-
-
-
 from keras import backend as K
 
 from keras import activations
@@ -94,7 +89,7 @@ class RBMhidden(Layer):
                                  trainable=True,
                                  name="h")        
 
-        self.built = True  # 最后这句话一定要加上            
+        self.built = True          
 
 
     
