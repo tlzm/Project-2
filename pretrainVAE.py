@@ -45,7 +45,7 @@ def reshapeFeatures(id_df, seq_length, seq_cols):
     :return: a generator of the sequences
     """
     data_matrix = id_df[seq_cols].values
-    num_elements = data_matrix.shape[0] # 输出行数
+    num_elements = data_matrix.shape[0] 
     for start, stop in zip(range(0, num_elements-seq_length+1), range(seq_length, num_elements+1)):
         yield data_matrix[start:stop, :]
         
@@ -53,7 +53,7 @@ def reshapeFeatures(id_df, seq_length, seq_cols):
 # pick the feature columns 
 #sensor_cols = ['s' + str(i) for i in range(1,22)]
 #sequence_cols = ['setting1', 'setting2', 'setting3', 'cycle_norm']
-#sequence_cols.extend(sensor_cols) # 为啥又建立一遍
+#sequence_cols.extend(sensor_cols) 
 sequence_cols = ['s2', 's3','s4', 's7', 's8',
          's9', 's11', 's12', 's13', 's14', 's15', 's17', 's20', 's21']
 #2, 3, 4, 7, 8, 9,11, 12, 13, 14, 15, 17, 20 and 21
