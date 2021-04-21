@@ -36,7 +36,7 @@ sequence_length = 30
 # pick the feature columns 
 #sensor_cols = ['s' + str(i) for i in range(1,22)]
 #sequence_cols = ['setting1', 'setting2', 'setting3', 'cycle_norm']
-#sequence_cols.extend(sensor_cols) # 为啥又建立一遍
+#sequence_cols.extend(sensor_cols)
 sequence_cols = ['s2', 's3','s4', 's7', 's8',
          's9', 's11', 's12', 's13', 's14', 's15', 's17', 's20', 's21']
 #2, 3, 4, 7, 8, 9,11, 12, 13, 14, 15, 17, 20 and 21
@@ -61,7 +61,7 @@ def reshapeFeatures(id_df, seq_length, seq_cols):
     principalComponents = pca.fit_transform(data_matrix)
     features = range(pca.n_components_)
     data_matrix= principalComponents    
-    num_elements = data_matrix.shape[0] # 输出行数
+    num_elements = data_matrix.shape[0] 
     for start, stop in zip(range(0, num_elements-seq_length), range(seq_length, num_elements)):
         yield data_matrix[start:stop, :]
         
@@ -96,7 +96,7 @@ print(label_array.shape)
 # MODEL
 
 def root_mean_squared_error(y_true, y_pred):
-        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) # 均方根差
+        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1))
 
 def exps(y_true, y_pred):
         return K.mean(K.exp(K.abs(y_pred - y_true)/10), axis=-1) #
@@ -111,14 +111,10 @@ nb_out = label_array.shape[1]
 
 
 
-
-
-
-
 #Bidirectional
 model = Sequential()
 #model.add(Attention_layer())
-#model.add(LSTM(input_shape=(sequence_length, nb_features), units=64, return_sequences=True, name="lstm_0")) #第一层
+#model.add(LSTM(input_shape=(sequence_length, nb_features), units=64, return_sequences=True, name="lstm_0")) 
 #model.add(Conv1D(filters=7, kernel_size=10, activation='relu'))
 #model.add(Conv1D(filters=7, kernel_size=10, activation='relu'))
 #model.add(Conv1D(filters=7, kernel_size=1, activation='relu'))
