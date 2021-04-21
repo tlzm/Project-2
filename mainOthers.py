@@ -28,7 +28,7 @@ n_turb = test_data['id'].unique().max()
 # pick the feature columns 
 #sensor_cols = ['s' + str(i) for i in range(1,22)]
 #sequence_cols = ['setting1', 'setting2', 'setting3', 'cycle_norm']
-#sequence_cols.extend(sensor_cols) # 为啥又建立一遍
+#sequence_cols.extend(sensor_cols)
 sequence_cols = ['s2', 's3','s4', 's7', 's8','s9', 's11', 's12', 's13', 's14', 's15', 's17', 's20', 's21']
 #2, 3, 4, 7, 8, 9,11, 12, 13, 14, 15, 17, 20 and 21
 
@@ -63,7 +63,7 @@ label_array_test_last = test_data.groupby('id')['RUL'].nth(-1)[y_mask].values
 
 label_array_test_last = label_array_test_last.reshape(label_array_test_last.shape[0],1).astype(np.float32)
 
-def root_mean_squared_error(y_true, y_pred): # 返回均方差RMSE
+def root_mean_squared_error(y_true, y_pred):
     return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1))
 
 def exps(y_true, y_pred):
@@ -116,9 +116,9 @@ if os.path.isfile(output_path):
     print('\nRMSE: {}'.format(RMSE(y_true_test, y_pred_test)))
     print('\nscore: {}'.format(scorecalc(y_true_test, y_pred_test)))
     
-    s1 = ((y_pred_test - y_true_test)**2).sum() #误差平方和
-    moy = y_pred_test.mean() # 预测值均值
-    s2 = ((y_pred_test - moy)**2).sum() # 预测值与预测均值的平方和
+    s1 = ((y_pred_test - y_true_test)**2).sum() 
+    moy = y_pred_test.mean() 
+    s2 = ((y_pred_test - moy)**2).sum() 
     s = 1 - s1/s2
     print('\nEfficiency: {}%'.format(s * 100))
 
