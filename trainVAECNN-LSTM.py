@@ -29,29 +29,13 @@ train_data = pd.read_csv('input/train.csv')
 test_data = pd.read_csv("input/test.csv")
 n_turb = train_data['id'].unique().max()
 
-output_path1 = 'model/regression_model_v1.h5'
-output_path2 = 'model/regression_model_v2.h5'
-output_path3 = 'model/regression_model_v3.h5'
-output_path4 = 'model/regression_model_v4.h5'
-
 # pick a large window size of 30 cycles
 sequence_length = 19
 
 # function to reshape features into (samples, time steps, features) 
 def reshapeFeatures(id_df, seq_length, seq_cols):
-    """
-    Only sequences that meet the window-length are considered, no padding is used. This means for testing
-    we need to drop those which are below the window-length.
-    An alternative would be to pad sequences so that
-    we can use shorter ones.
-    
-    :param id_df: the data set to modify
-    :param seq_length: the length of the window
-    :param seq_cols: the columns concerned by the step
-    :return: a generator of the sequences
-    """
     data_matrix = id_df[seq_cols].values
-    num_elements = data_matrix.shape[0] # 输出行数
+    num_elements = data_matrix.shape[0] 
     for start, stop in zip(range(0, num_elements-seq_length+1), range(seq_length, num_elements+1)):
         yield data_matrix[start:stop, :]
         
@@ -59,7 +43,7 @@ def reshapeFeatures(id_df, seq_length, seq_cols):
 # pick the feature columns 
 #sensor_cols = ['s' + str(i) for i in range(1,22)]
 #sequence_cols = ['setting1', 'setting2', 'setting3', 'cycle_norm']
-#sequence_cols.extend(sensor_cols) # 为啥又建立一遍
+#sequence_cols.extend(sensor_cols) 
 sequence_cols = ['s2', 's3','s4', 's7', 's8',
          's9', 's11', 's12', 's13', 's14', 's15', 's17', 's20', 's21']
 #2, 3, 4, 7, 8, 9,11, 12, 13, 14, 15, 17, 20 and 21
@@ -203,62 +187,4 @@ plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.show()
 fig_acc.savefig("output/model_regression_loss.png")
-
-fix1 = keras.Model(x, y)
-
-model1 = Sequential()
-model1.add(encoder)
-model1.add(fix1)
-model1.add(Dropout(0.2, name="dropout_4"))
-model1.add(Dense(units=nb_out))
-model1.add(Activation("swish", name="activation_0"))
-model1.compile(loss=score_calc, optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-print(model1.summary())
-epochs = 500
-batch_size = 1024
-history = model1.fit(feat_array,label_array, epochs=epochs, batch_size=batch_size, shuffle=True,validation_split=0.1, verbose=1,
-          callbacks = [keras.callbacks.EarlyStopping(monitor='val_score_calc', min_delta=0, patience=80,verbose=0, mode='min'),
-                       keras.callbacks.ModelCheckpoint(output_path1, monitor='val_score_calc',save_best_only=True, mode='min', verbose=0)]
-          )
-print(history.history.keys())
-print("Model saved as {}".format(output_path1))
-
-fix2 = keras.Model(x, y)
-
-model2 = Sequential()
-model2.add(encoder)
-model2.add(fix2)
-model2.add(Dropout(0.2, name="dropout_4"))
-model2.add(Dense(units=nb_out))
-model2.add(Activation("swish", name="activation_0"))
-model2.compile(loss=score_calc, optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-print(model2.summary())
-epochs = 500
-batch_size = 1024
-history = model2.fit(feat_array,label_array, epochs=epochs, batch_size=batch_size, shuffle=True,validation_split=0.1, verbose=1,
-          callbacks = [keras.callbacks.EarlyStopping(monitor='val_mae', min_delta=0, patience=80,verbose=0, mode='min'),
-                       keras.callbacks.ModelCheckpoint(output_path2, monitor='val_score_calc',save_best_only=True, mode='min', verbose=0)]
-          )
-print(history.history.keys())
-print("Model saved as {}".format(output_path2))
-
-fix3 = keras.Model(x, y)
-
-model3 = Sequential()
-model3.add(encoder)
-model3.add(fix3)
-model3.add(Dropout(0.2, name="dropout_4"))
-model3.add(Dense(units=nb_out))
-model3.add(Activation("swish", name="activation_0"))
-model3.compile(loss=score_calc, optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-print(model3.summary())
-epochs = 500
-batch_size = 1024
-history = model3.fit(feat_array,label_array, epochs=epochs, batch_size=batch_size, shuffle=True,validation_split=0.1, verbose=1,
-          callbacks = [keras.callbacks.EarlyStopping(monitor='val_exps', min_delta=0, patience=80,verbose=0, mode='min'),
-                       keras.callbacks.ModelCheckpoint(output_path3, monitor='val_exps',save_best_only=True, mode='min', verbose=0)]
-          )
-print(history.history.keys())
-print("Model saved as {}".format(output_path3))
-
 
