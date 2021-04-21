@@ -28,11 +28,6 @@ train_data = pd.read_csv('input/train.csv')
 test_data = pd.read_csv("input/test.csv")
 n_turb = train_data['id'].unique().max()
 
-output_path1 = 'model/regression_model_v1.h5'
-output_path2 = 'model/regression_model_v2.h5'
-output_path3 = 'model/regression_model_v3.h5'
-output_path4 = 'model/regression_model_v4.h5'
-
 # pick a large window size of 30 cycles
 sequence_length = 31
 
@@ -52,7 +47,7 @@ def reshapeFeatures(id_df, seq_length, seq_cols):
     :return: a generator of the sequences
     """
     data_matrix = id_df[seq_cols].values
-    num_elements = data_matrix.shape[0] # 输出行数
+    num_elements = data_matrix.shape[0]
     for start, stop in zip(range(0, num_elements-seq_length+1), range(seq_length, num_elements+1)):
         yield data_matrix[start:stop, :]
         
@@ -118,7 +113,7 @@ y_train_labeled   = label_array[idxs_annot]
 # MODEL
 
 def root_mean_squared_error(y_true, y_pred):
-        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) # 均方根差
+        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) 
 
 def exps(y_true, y_pred):
         return K.mean((-1+K.exp(K.relu(y_true-y_pred)/13)+-1+K.exp(K.relu(y_pred-y_true)/10)),axis=-1)+K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) #
@@ -279,123 +274,3 @@ plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.show()
 fig_acc.savefig("output/model_regression_loss.png")
-
-
-
-
-fix1 = keras.Model(x, y)
-
-#Bidirectional
-model1 = Sequential()
-model1.add(encoder)
-model1.add(fix1)
-#model.add(Dropout(0.2, name="dropout_3"))
-#model.add(Dense(units=16))
-model1.add(Dropout(0.2, name="dropout_4"))
-model1.add(Dense(units=nb_out))
-model1.add(Activation("swish", name="activation_0"))
-model1.compile(loss=score_calc, optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-#model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-print(model1.summary())
-
-epochs = 600
-batch_size = 128
-
-# fit the network
-history = model1.fit(x_train_labeled, y_train_labeled, epochs=epochs, batch_size=batch_size, shuffle=True,validation_split=0.1, verbose=1,
-          callbacks = [keras.callbacks.EarlyStopping(monitor='val_score_calc', min_delta=0, patience=80,verbose=0, mode='min'),
-                       keras.callbacks.ModelCheckpoint(output_path1, monitor='val_score_calc',save_best_only=True, mode='min', verbose=0)]
-          )
-#validation_data=(test_array,tlabel_array)
-# list all data in history
-print(history.history.keys())
-print("Model saved as {}".format(output_path1))
-
-
-fix2 = keras.Model(x, y)
-
-#Bidirectional
-model2 = Sequential()
-model2.add(encoder)
-model2.add(fix2)
-#model.add(Dropout(0.2, name="dropout_3"))
-#model.add(Dense(units=16))
-model2.add(Dropout(0.2, name="dropout_4"))
-model2.add(Dense(units=nb_out))
-model2.add(Activation("swish", name="activation_0"))
-model2.compile(loss=score_calc, optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-#model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-print(model2.summary())
-
-epochs = 600
-batch_size = 128
-
-# fit the network
-history = model2.fit(x_train_labeled, y_train_labeled, epochs=epochs, batch_size=batch_size, shuffle=True,validation_split=0.1, verbose=1,
-          callbacks = [keras.callbacks.EarlyStopping(monitor='val_score_calc', min_delta=0, patience=80,verbose=0, mode='min'),
-                       keras.callbacks.ModelCheckpoint(output_path2, monitor='val_score_calc',save_best_only=True, mode='min', verbose=0)]
-          )
-#validation_data=(test_array,tlabel_array)
-# list all data in history
-print(history.history.keys())
-print("Model saved as {}".format(output_path2))
-
-
-
-
-fix3 = keras.Model(x,y)
-
-#Bidirectional
-model3 = Sequential()
-model3.add(encoder)
-model3.add(fix3)
-#model.add(Dropout(0.2, name="dropout_3"))
-#model.add(Dense(units=16))
-model3.add(Dropout(0.2, name="dropout_4"))
-model3.add(Dense(units=nb_out))
-model3.add(Activation("swish", name="activation_0"))
-model3.compile(loss=score_calc, optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-#model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-print(model3.summary())
-
-epochs = 600
-batch_size = 128
-
-# fit the network
-history = model3.fit(x_train_labeled, y_train_labeled, epochs=epochs, batch_size=batch_size, shuffle=True,validation_split=0.1, verbose=1,
-          callbacks = [keras.callbacks.EarlyStopping(monitor='val_score_calc', min_delta=0, patience=80,verbose=0, mode='min'),
-                       keras.callbacks.ModelCheckpoint(output_path3, monitor='val_score_calc',save_best_only=True, mode='min', verbose=0)]
-          )
-#validation_data=(test_array,tlabel_array)
-# list all data in history
-print(history.history.keys())
-print("Model saved as {}".format(output_path3))
-
-
-fix4 = keras.Model(x,y)
-
-#Bidirectional
-model4 = Sequential()
-model4.add(encoder)
-model4.add(fix4)
-#model.add(Dropout(0.2, name="dropout_3"))
-#model.add(Dense(units=16))
-model4.add(Dropout(0.2, name="dropout_4"))
-model4.add(Dense(units=nb_out))
-model4.add(Activation("swish", name="activation_0"))
-model4.compile(loss=score_calc, optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-#model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=[root_mean_squared_error, exps,'mae', score_calc])
-print(model4.summary())
-
-epochs = 600
-batch_size = 128
-
-# fit the network
-history = model4.fit(x_train_labeled, y_train_labeled, epochs=epochs, batch_size=batch_size, shuffle=True,validation_split=0.1, verbose=1,
-          callbacks = [keras.callbacks.EarlyStopping(monitor='val_score_calc', min_delta=0, patience=80,verbose=0, mode='min'),
-                       keras.callbacks.ModelCheckpoint(output_path4, monitor='val_score_calc',save_best_only=True, mode='min', verbose=0)]
-          )
-#validation_data=(test_array,tlabel_array)
-# list all data in history
-print(history.history.keys())
-print("Model saved as {}".format(output_path4))
