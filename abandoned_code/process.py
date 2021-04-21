@@ -14,7 +14,7 @@ names = ['id', 'cycle', 'setting1', 'setting2', 'setting3', 's1', 's2', 's3','s4
 
 # read training data
 train_data = pd.read_csv('input/TrainSet.txt', sep=" ", header=None)
-train_data.drop(train_data.columns[[26, 27]], axis=1, inplace=True) # drop默认删除行，删除列+axis=1
+train_data.drop(train_data.columns[[26, 27]], axis=1, inplace=True) 
 train_data.columns = names
 
 train_data = train_data.sort_values(['id','cycle'])
@@ -37,30 +37,30 @@ n_train, n_features = train_data.shape
 print("There is {} turbines in each dataset".format(n_turb))
 
 # Data Labeling - generate column RUL
-rul = pd.DataFrame(train_data.groupby('id')['cycle'].max()).reset_index() # 没看懂，groupby用id进行分类，然后找最大的cycle？最后这个reset_index是啥意思？
+rul = pd.DataFrame(train_data.groupby('id')['cycle'].max()).reset_index() 
 rul.columns = ['id', 'max']
 train_data = train_data.merge(rul, on=['id'], how='left')
 train_data['RUL'] = train_data['max'] - train_data['cycle']
 train_data.drop('max', axis=1, inplace=True)
 
 # generate label columns
-w1 = 30 # rul小于30的标为1
-w0 = 15 # rul小于15的标为2
+w1 = 30
+w0 = 15
 train_data['label1'] = np.where(train_data['RUL'] <= w1, 1, 0 )
 train_data['label2'] = train_data['label1']
 train_data.loc[train_data['RUL'] <= w0, 'label2'] = 2
 
 # MinMax normalization (from 0 to 1)
 train_data['cycle_norm'] = train_data['cycle']
-cols_normalize = train_data.columns.difference(['id','cycle','RUL','label1','label2']) # 把除了这些标签的都提取出来
+cols_normalize = train_data.columns.difference(['id','cycle','RUL','label1','label2']) 
 min_max_scaler = MinMaxScaler() # 归一化
-norm_train_data = pd.DataFrame(min_max_scaler.fit_transform(train_data[cols_normalize]),columns=cols_normalize, index=train_data.index) # fit_transform是用来算归一化的
+norm_train_data = pd.DataFrame(min_max_scaler.fit_transform(train_data[cols_normalize]),columns=cols_normalize, index=train_data.index)
 join_data = train_data[train_data.columns.difference(cols_normalize)].join(norm_train_data)
 train_data = join_data.reindex(columns = train_data.columns)
 
 print("The size of the train data set is now: {} entries and {} features.".format(train_data.shape[0],train_data.shape[1]))
 
-train_data.to_csv('input/train.csv', encoding='utf-8',index = None) # 为啥要把traindata写成csv
+train_data.to_csv('input/train.csv', encoding='utf-8',index = None)
 print("Train Data saved as input/train.csv")
 
 # MinMax normalization (from 0 to 1)
