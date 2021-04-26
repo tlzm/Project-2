@@ -85,7 +85,7 @@ print(label_array.shape)
 # MODEL
 
 def root_mean_squared_error(y_true, y_pred):
-        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) # 均方根差
+        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) 
 
 def score_calc(y_true, y_pred):
     return K.mean((-1+K.exp(K.relu(y_true-y_pred)/13)+-1+K.exp(K.relu(y_pred-y_true)/10)),axis=-1)
