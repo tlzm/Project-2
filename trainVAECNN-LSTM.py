@@ -88,7 +88,7 @@ label_array_test_last = label_array_test_last.reshape(label_array_test_last.shap
 # MODEL
 
 def root_mean_squared_error(y_true, y_pred):
-        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) # 均方根差
+        return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1))
 
 def exps(y_true, y_pred):
         return K.mean((-1+K.exp(K.relu(y_true-y_pred)/13)+-1+K.exp(K.relu(y_pred-y_true)/10)),axis=-1)+0.5*K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1)) #
