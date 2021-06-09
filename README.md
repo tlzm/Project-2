@@ -5,4 +5,4 @@ This is the code for remaining useful life prediction based on the C-MAPSS (PHM-
 
 Most of the codes is not the last version, and need to be fine tuned.
 
-Paper:![Uploading image.png…]()
+Paper:https://doi.org/10.1007/s00521-021-06089-1
