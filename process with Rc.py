@@ -37,7 +37,7 @@ n_train, n_features = train_data.shape
 print("There is {} turbines in each dataset".format(n_turb))
 
 # Data Labeling - generate column RUL
-rul = pd.DataFrame(train_data.groupby('id')['cycle'].max()).reset_index() # 没看懂，groupby用id进行分类，然后找最大的cycle？最后这个reset_index是啥意思？
+rul = pd.DataFrame(train_data.groupby('id')['cycle'].max()).reset_index() 
 rul.columns = ['id', 'max']
 train_data = train_data.merge(rul, on=['id'], how='left')
 train_data['RUL'] = train_data['max'] - train_data['cycle']
@@ -62,7 +62,7 @@ train_data = join_data.reindex(columns = train_data.columns)
 
 print("The size of the train data set is now: {} entries and {} features.".format(train_data.shape[0],train_data.shape[1]))
 
-train_data.to_csv('input/train.csv', encoding='utf-8',index = None) # 为啥要把traindata写成csv
+train_data.to_csv('input/train.csv', encoding='utf-8',index = None) 
 print("Train Data saved as input/train.csv")
 
 # MinMax normalization (from 0 to 1)
